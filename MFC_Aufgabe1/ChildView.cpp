@@ -12,6 +12,7 @@
 #define new DEBUG_NEW
 #endif
 
+static int auswahl;
 
 // CChildView
 
@@ -146,6 +147,7 @@ void CChildView::OnAufgabe1JuliamengeZoom()
 	GetParent()->SetWindowPos(NULL, 50, 50, 700 + diffx, 700 + diffy, SWP_SHOWWINDOW);
 	UpdateWindow();
 
+	auswahl = 1;
 
 	xd_min = -1.6, xd_delta = 3.2;
 	yd_min = -1.6, yd_delta = 3.2;
@@ -200,8 +202,16 @@ void CChildView::OnLButtonUp(UINT nFlags, CPoint point)
 	xd_min = xd - xd_delta / 2;
 	yd_min = yd - yd_delta / 2;
 
-	JuliaMalen();
-
+	if (auswahl == 1) {
+		JuliaMalen();
+	}
+	else if (auswahl == 2) {
+		MandelbrotMalen();
+	}
+	else {
+		return;
+	}
+	
 	CWnd::OnLButtonUp(nFlags, point);
 }
 
@@ -217,8 +227,15 @@ void CChildView::OnRButtonUp(UINT nFlags, CPoint point)
 	xd_min = xd - xd_delta / 2;
 	yd_min = yd - yd_delta / 2;
 
-	JuliaMalen();
-
+	if (auswahl == 1) {
+		JuliaMalen();
+	}
+	else if (auswahl == 2) {
+		MandelbrotMalen();
+	}
+	else {
+		return;
+	}
 
 	CWnd::OnRButtonUp(nFlags, point);
 }
@@ -234,9 +251,10 @@ void CChildView::OnAufgabe1Mandelbrot()
 	GetParent()->SetWindowPos(NULL, 50, 50, 700 + diffx, 700 + diffy, SWP_SHOWWINDOW);
 	UpdateWindow();
 
+	auswahl = 2;
 
-	xd_min = -2., xd_delta = 0.5;
-	yd_min = -1.25, yd_delta = 1.25;
+	xd_min = -2., xd_delta = 2.5;
+	yd_min = -1.25, yd_delta = 2.5;
 
 	MandelbrotMalen();
 }
@@ -257,8 +275,8 @@ void CChildView::MandelbrotMalen() {
 			int n;
 			double ab2;
 			for (n = 1; n < 255; n++) {
-				a_neu = pow(a_alt, 2) - pow(b_alt, 2) - 0.75;
-				b_neu = 2 * a_alt * b_alt + 0.06;
+				a_neu = pow(a_alt, 2) - pow(b_alt, 2) + xd;
+				b_neu = 2 * a_alt * b_alt + yd;
 				a_alt = a_neu;
 				b_alt = b_neu;
 				ab2 = (pow(a_alt, 2) + pow(b_alt, 2));
