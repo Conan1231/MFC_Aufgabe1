@@ -45,3 +45,11 @@ void Matrix2::setTrans(double dx, double dy) {
 	mat[DIM - 1][0] = dx;
 	mat[DIM - 1][1] = dy;
 }
+
+
+void Matrix2::setRotation(double w) {
+	mat[0][0] = mat[1][1] = cos(w);
+	mat[0][1] = sin(w);
+	mat[1][0] = -sin(w);
+	
+}
