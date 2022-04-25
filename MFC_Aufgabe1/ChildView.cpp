@@ -7,6 +7,7 @@
 #include "framework.h"
 #include "MFC_Aufgabe1.h"
 #include "ChildView.h"
+#include "Vektor2.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -33,6 +34,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_LBUTTONUP()
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_AUFGABE1_MANDELBROT, &CChildView::OnAufgabe1Mandelbrot)
+	ON_COMMAND(ID_VEKTOR_QUADRAT1, &CChildView::OnVektorQuadrat1)
 END_MESSAGE_MAP()
 
 
@@ -292,4 +294,41 @@ void CChildView::MandelbrotMalen() {
 			}
 		}
 	}
+}
+
+void CChildView::OnVektorQuadrat1()
+{
+	Vektor2 Quadrat[4];
+	Quadrat[0] = Vektor2(50, 50);
+	Quadrat[1] = Vektor2(150, 50);
+	Quadrat[2] = Vektor2(150, 150);
+	Quadrat[3] = Vektor2(50, 150);
+
+	CDC* pDC = GetDC();
+
+	Matrix2 MT;
+	//MT.setTrans(200, 70);
+	MT.setTrans(10, 0);
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	for (int anim = 0; anim < 50; anim++) {
+		pDC->FillSolidRect(rect, RGB(136, 0, 255));
+		// Quadrat verschieben
+		for (int i = 0; i < 4; i++) {
+			Quadrat[i] = MT * Quadrat[i];
+		}
+
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]); // Quadrat malen
+
+		for (int i = 0; i < 4; i++) {
+			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+		}
+		Sleep(5);
+	}
+
+	
+
+
 }

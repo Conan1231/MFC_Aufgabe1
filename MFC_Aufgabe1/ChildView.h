@@ -44,5 +44,6 @@ public:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnAufgabe1Mandelbrot();
+	afx_msg void OnVektorQuadrat1();
 };
 
