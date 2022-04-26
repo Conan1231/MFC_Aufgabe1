@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_AUFGABE1_MANDELBROT, &CChildView::OnAufgabe1Mandelbrot)
 	ON_COMMAND(ID_VEKTOR_QUADRAT1, &CChildView::OnVektorQuadrat1)
+	ON_COMMAND(ID_VEKTOR_QUADRATROTIEREN, &CChildView::OnVektorQuadratrotieren)
+	ON_COMMAND(ID_VEKTOR_QUADRATROTIERENV2, &CChildView::OnVektorQuadratrotierenv2)
 END_MESSAGE_MAP()
 
 
@@ -306,21 +308,21 @@ void CChildView::OnVektorQuadrat1()
 
 	CDC* pDC = GetDC();
 
-	Matrix2 MT;
-	//MT.setTrans(200, 70);
-	MT.setTrans(10, 0);
+	Matrix2 TransMat;
+	//TransMat.setTrans(200, 70);
+	TransMat.setTrans(10, 0);
 
 	CRect rect;
 	GetClientRect(&rect);
 
-	for (int anim = 0; anim < 50; anim++) {
+	for (int anim = 0; anim < 100; anim++) {
 		pDC->FillSolidRect(rect, RGB(136, 0, 255));
 		// Quadrat verschieben
 		for (int i = 0; i < 4; i++) {
-			Quadrat[i] = MT * Quadrat[i];
+			Quadrat[i] = TransMat * Quadrat[i];
 		}
-
-		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]); // Quadrat malen
+		// Quadrat malen
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]); 
 
 		for (int i = 0; i < 4; i++) {
 			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
@@ -328,7 +330,94 @@ void CChildView::OnVektorQuadrat1()
 		Sleep(5);
 	}
 
+}
+
+
+void CChildView::OnVektorQuadratrotieren()
+{
+	Vektor2 Quadrat[4];
+	Quadrat[0] = Vektor2(50, 50);
+	Quadrat[1] = Vektor2(150, 50);
+	Quadrat[2] = Vektor2(150, 150);
+	Quadrat[3] = Vektor2(50, 150);
+
+	CDC* pDC = GetDC();
+
+	Matrix2 TransMat;
+	// Quadrat verschieben in Ursprung cords 0,0
+	TransMat.setTrans(-100, -100);
+
+	// Quadrat verschieben zum Ursprung
+	for (int i = 0; i < 4; i++) {
+		Quadrat[i] = TransMat * Quadrat[i];
+	}
+	/* Quadrat malen
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+	for (int i = 0; i < 4; i++) {
+		pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+	}*/
+
+	// Rotationsmatrix anwenden im Ursprung
+	Matrix2 RotMat;
+	RotMat.setRotation(10);
+	// Quadrat rotieren
+	for (int i = 0; i < 4; i++) {
+		Quadrat[i] = RotMat * Quadrat[i];
+	}
 	
+	/* Quadrat malen
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]); 
+	for (int i = 0; i < 4; i++) {
+		pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+	}*/
+
+	// Rotierte Matrix auf 100,100 verschieben
+	Matrix2 TransMatReverse;
+	TransMatReverse.setTrans(100, 100);
+	// Quadrat verschieben
+	for (int i = 0; i < 4; i++) {
+		Quadrat[i] = TransMatReverse * Quadrat[i];
+	}
+	// Quadrat malen
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+	for (int i = 0; i < 4; i++) {
+		pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+	}
+}
 
 
+void CChildView::OnVektorQuadratrotierenv2()
+{
+	Vektor2 Quadrat[4];
+	Quadrat[0] = Vektor2(50, 50);
+	Quadrat[1] = Vektor2(150, 50);
+	Quadrat[2] = Vektor2(150, 150);
+	Quadrat[3] = Vektor2(50, 150);
+
+	CDC* pDC = GetDC();
+
+	Matrix2 TransMat, RotMat, TransMatReverse;
+	TransMat.setTrans(-100, -100);
+	RotMat.setRotation(10);
+	TransMatReverse.setTrans(400, 400);
+	
+	CRect rect;
+	GetClientRect(&rect);
+
+	for (int anim = 0; anim < 100; anim++) {
+		pDC->FillSolidRect(rect, RGB(136, 0, 255));
+		for (int i = 0; i < 4; i++) {
+			Quadrat[i] = TransMat * Quadrat[i]; // Verschieben Ursprung
+			Quadrat[i] = RotMat * Quadrat[i]; // Rotieren im Ursprung
+			Quadrat[i] = TransMatReverse * Quadrat[i]; // Verschieben undo
+			//Quadrat[i] = TransMat*RotMat*TransMatReverse * Quadrat[i];  // Benötigt Operator Funktionsüberladung für Matrix * Matrix Operation
+		}
+
+		// Quadrat malen
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+		for (int i = 0; i < 4; i++) {
+			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+		}
+		Sleep(10);
+	}
 }
