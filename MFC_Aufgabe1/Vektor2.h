@@ -17,5 +17,6 @@ public:
 	Matrix2();
 	
 	void setTrans(double dx, double dy);
+	void setRotation(double w);
 	Vektor2 operator * (const Vektor2& v); // Operator überschreiben -> vektor2 = matrix * vektor1
 };
