@@ -19,6 +19,10 @@ static int auswahl;
 
 CChildView::CChildView()
 {
+	double xd_min = 0;
+	double xd_delta = 0;
+	double yd_min = 0;
+	double yd_delta = 0;
 }
 
 CChildView::~CChildView()
@@ -37,6 +41,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_VEKTOR_QUADRAT1, &CChildView::OnVektorQuadrat1)
 	ON_COMMAND(ID_VEKTOR_QUADRATROTIEREN, &CChildView::OnVektorQuadratrotieren)
 	ON_COMMAND(ID_VEKTOR_QUADRATROTIERENV2, &CChildView::OnVektorQuadratrotierenv2)
+	ON_COMMAND(ID_AUFGABE4_W32780, &CChildView::OnAufgabe4W32780)
 END_MESSAGE_MAP()
 
 
@@ -316,7 +321,7 @@ void CChildView::OnVektorQuadrat1()
 	GetClientRect(&rect);
 
 	for (int anim = 0; anim < 100; anim++) {
-		pDC->FillSolidRect(rect, RGB(136, 0, 255));
+		pDC->FillSolidRect(rect, RGB(138, 43, 226));
 		// Quadrat verschieben
 		for (int i = 0; i < 4; i++) {
 			Quadrat[i] = TransMat * Quadrat[i];
@@ -388,24 +393,30 @@ void CChildView::OnVektorQuadratrotieren()
 
 void CChildView::OnVektorQuadratrotierenv2()
 {
+	// Höhe und Breite der Programmoberfläche auslesen
+	CRect rect;
+	GetClientRect(&rect);
+
+	double windowx = rect.Width() / 2;
+	double windowy = rect.Height() / 2;
+
+	double size = 100;
+
 	Vektor2 Quadrat[4];
-	Quadrat[0] = Vektor2(50, 50);
-	Quadrat[1] = Vektor2(150, 50);
-	Quadrat[2] = Vektor2(150, 150);
-	Quadrat[3] = Vektor2(50, 150);
+	Quadrat[0] = Vektor2(windowx - size, windowy - size);
+	Quadrat[1] = Vektor2(windowx + size , windowy - size);
+	Quadrat[2] = Vektor2(windowx + size, windowy + size);
+	Quadrat[3] = Vektor2(windowx - size, windowy + size);
 
 	CDC* pDC = GetDC();
 
 	Matrix2 TransMat, RotMat, TransMatReverse;
-	TransMat.setTrans(-100, -100);
-	RotMat.setRotation(10);
-	TransMatReverse.setTrans(400, 400);
-	
-	CRect rect;
-	GetClientRect(&rect);
+	TransMat.setTrans(-windowx, -windowy);
+	RotMat.setRotation(0.1);
+	TransMatReverse.setTrans(windowx, windowy);
 
-	for (int anim = 0; anim < 100; anim++) {
-		pDC->FillSolidRect(rect, RGB(136, 0, 255));
+	for (int anim = 0; anim < 500; anim++) {
+		pDC->FillSolidRect(rect, RGB(138, 43, 226));
 		for (int i = 0; i < 4; i++) {
 			Quadrat[i] = TransMat * Quadrat[i]; // Verschieben Ursprung
 			Quadrat[i] = RotMat * Quadrat[i]; // Rotieren im Ursprung
@@ -419,5 +430,57 @@ void CChildView::OnVektorQuadratrotierenv2()
 			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
 		}
 		Sleep(10);
+		
+		// Animation abbrechen, wenn Esc gedrückt
+		if (GetAsyncKeyState(VK_ESCAPE)) {
+			break;
+		}
 	}
+}
+
+
+void CChildView::OnAufgabe4W32780()
+{
+	CRect rect;
+	GetClientRect(&rect);
+
+	double windowx = rect.Width() / 2;
+	double windowy = rect.Height() / 2;
+	
+	CDC* m_DC = GetDC();
+	
+	for (int anim = 0; anim < 500; anim++) {
+		m_DC.FillSolidRect(0, 0, 500, 500, RGB(255, 255, 255));
+		Sleep(10);
+		RY.SetRot(winkel);
+		winkel += 0.01;
+		for (int i = 0; i < 8; i++) {
+			wurfel[i] = P * RX * RZ * orig[i];
+			double c = wurfel[i].v[3];
+			wurfel[i] = T * wurfel[i] / c;
+		}
+
+		// hinten
+		m_DC.MoveTo(wurfel[3].toPoint());
+		for (int i = 0; i < 4; i++) {
+			m_DC.LineTo(wurfel[i].toPoint());
+		}
+		// vorne
+		m_DC.MoveTo(wurfel[7].toPoint());
+		for (int i = 4; i < 8; i++) {
+			m_DC.LineTo(wurfel[i].toPoint());
+		}
+
+		for (int i = 0; i < 4; i++) {
+			m_DC.MoveTo(wurfel[i].toPoint());
+			m_DC.LineTo(wurfel[i + 4].toPoint());
+		}
+		pDC->BitBlt(0, 0, windowx, windowy, &m_DC, 0, 0, SRCCOPY);
+
+		// Animation abbrechen, wenn Esc gedrückt
+		if (GetAsyncKeyState(VK_ESCAPE)) {
+			break;
+		}
+	}
+	
 }

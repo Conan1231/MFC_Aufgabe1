@@ -47,5 +47,6 @@ public:
 	afx_msg void OnVektorQuadrat1();
 	afx_msg void OnVektorQuadratrotieren();
 	afx_msg void OnVektorQuadratrotierenv2();
+	afx_msg void OnAufgabe4W32780();
 };
 

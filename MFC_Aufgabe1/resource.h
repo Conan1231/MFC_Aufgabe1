@@ -15,13 +15,14 @@
 #define ID_VEKTOR_QUADRAT1              32777
 #define ID_VEKTOR_QUADRATROTIEREN       32778
 #define ID_VEKTOR_QUADRATROTIERENV2     32779
+#define ID_AUFGABE4_W32780              32780
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32780
+#define _APS_NEXT_COMMAND_VALUE         32781
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
