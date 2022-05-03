@@ -51,5 +51,4 @@ void Matrix2::setRotation(double w) {
 	mat[0][0] = mat[1][1] = cos(w);
 	mat[0][1] = sin(w);
 	mat[1][0] = -sin(w);
-	
 }

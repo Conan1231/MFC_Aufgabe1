@@ -8,6 +8,7 @@
 #include "MFC_Aufgabe1.h"
 #include "ChildView.h"
 #include "Vektor2.h"
+#include "Vektor3.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -447,35 +448,67 @@ void CChildView::OnAufgabe4W32780()
 	double windowx = rect.Width() / 2;
 	double windowy = rect.Height() / 2;
 	
+	double size = 150;
+	int diff = 0;
+
+	Vektor3 cube[8];
+	Matrix3 RotCube, TransCube, TransCubeReverse;
+
+	cube[0] = Vektor3(windowx - size, windowy - size, 0);
+	cube[1] = Vektor3(windowx + size, windowy - size, 0);
+	cube[2] = Vektor3(windowx + size, windowy + size, 0);
+	cube[3] = Vektor3(windowx - size, windowy + size, 0);
+	cube[4] = Vektor3(windowx - size + diff, windowy - size + diff, size * 2);
+	cube[5] = Vektor3(windowx + size + diff, windowy - size + diff, size * 2);
+	cube[6] = Vektor3(windowx + size + diff, windowy + size + diff, size * 2);
+	cube[7] = Vektor3(windowx - size + diff, windowy + size + diff, size * 2);
+
+
 	CDC* m_DC = GetDC();
+	//CDC* p_DC = GetDC();
 	
-	for (int anim = 0; anim < 500; anim++) {
-		m_DC.FillSolidRect(0, 0, 500, 500, RGB(255, 255, 255));
+	for (int anim = 0; anim < 90000; anim++) {
+		m_DC->FillSolidRect(0, 0, rect.Width(), rect.Height(), RGB(131, 89, 216));
 		Sleep(10);
-		RY.SetRot(winkel);
+		
+		/*RY.SetRot(winkel);
 		winkel += 0.01;
 		for (int i = 0; i < 8; i++) {
 			wurfel[i] = P * RX * RZ * orig[i];
 			double c = wurfel[i].v[3];
 			wurfel[i] = T * wurfel[i] / c;
+		}*/
+
+		// Rotieren
+		TransCube.setTrans(-windowx, -windowy);
+		RotCube.setRotationX(0.01);
+		RotCube.setRotationY(0.01);
+		RotCube.setRotationZ(0.01);
+		TransCubeReverse.setTrans(windowx, windowy);
+
+		for (int i = 0; i < 8; i++) {
+			cube[i] = TransCube * cube[i]; // Verschieben Ursprung
+			cube[i] = RotCube * cube[i]; // Rotieren im Ursprung
+			cube[i] = TransCubeReverse * cube[i]; // Verschieben undo
 		}
 
 		// hinten
-		m_DC.MoveTo(wurfel[3].toPoint());
+		m_DC->MoveTo(cube[3].vek[0], cube[3].vek[1]);
+		//sm_DC->FillSolidRect(cube[3].vek[0], cube[3].vek[1], cube[4].vek[0], cube[4].vek[1] ,RGB(255, 255, 255));
 		for (int i = 0; i < 4; i++) {
-			m_DC.LineTo(wurfel[i].toPoint());
+			m_DC->LineTo(cube[i].vek[0], cube[i].vek[1]);
 		}
 		// vorne
-		m_DC.MoveTo(wurfel[7].toPoint());
+		m_DC->MoveTo(cube[7].vek[0],cube[7].vek[1]); // vek[0] -> x-Koordinate | vek[1] -> y-Koordinate
 		for (int i = 4; i < 8; i++) {
-			m_DC.LineTo(wurfel[i].toPoint());
+			m_DC->LineTo(cube[i].vek[0], cube[i].vek[1]);
 		}
 
 		for (int i = 0; i < 4; i++) {
-			m_DC.MoveTo(wurfel[i].toPoint());
-			m_DC.LineTo(wurfel[i + 4].toPoint());
+			m_DC->MoveTo(cube[i].vek[0], cube[i].vek[1]);
+			m_DC->LineTo(cube[i+4].vek[0], cube[i+4].vek[1]);
 		}
-		pDC->BitBlt(0, 0, windowx, windowy, &m_DC, 0, 0, SRCCOPY);
+		//pDC->BitBlt(0, 0, windowx, windowy, &m_DC, 0, 0, SRCCOPY);
 
 		// Animation abbrechen, wenn Esc gedrückt
 		if (GetAsyncKeyState(VK_ESCAPE)) {

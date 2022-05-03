@@ -4,33 +4,69 @@
 
 // Standardkonstruktor
 Vektor3::Vektor3() {
+	vek[0] = 0;
+	vek[1] = 0;
+	vek[2] = 0;
+	vek[3] = 0;
+}
+
+// Initialisierungskonstruktor
+Vektor3::Vektor3(double x, double y, double z) {
+	vek[0] = x;
+	vek[1] = y;
+	vek[2] = z;
+	vek[3] = 1;
 
 }
 
-/*Vektor3::Vektor3(double x, double y, double z) {
-	cube[0] = x;
-	cube[1] = y;
-	cube[2] = z;
-	cube[3] = 1;
-}*/
-
-void setRotationX(float x) {
-	cube[1][1] = cos(x);
-	cube[1][2] = sin(x);
-	cube[2][1] = -sin(x);
-	cube[2][2] = cos(x);
+// Konstruktor Matrix
+Matrix3::Matrix3() {
+	for (int i = 0; i < DIM; i++) {  // j = Zeile ; i = Spalte
+		for (int j = 0; j < DIM; j++) {
+			if (i == j) {
+				mat[i][j] = 1;
+			}
+			else {
+				mat[i][j] = 0;
+			}
+		}
+	}
 }
 
-void setRotationY(float y) {
-	cube[0][0] = cos(y);
-	cube[0][2] = -sin(y);
-	cube[2][0] = sin(y);
-	cube[2][2] = cos(y);
+// Definition der Operatorüberschreibung, immer in Klasse des rechten Operanden!
+Vektor3 Matrix3::operator * (const Vektor3& v) {
+	Vektor3 temp;
+	for (int j = 0; j < DIM; j++) {
+		for (int i = 0; i < DIM; i++) {
+			temp.vek[j] = temp.vek[j] + mat[i][j] * v.vek[i]; // Zeilenweise vektor befüllen/ausrechnen
+		}
+	}
+	return temp;
 }
 
-void setRotationZ(float Z) {
-	cube[0][0] = cos(z);
-	cube[0][1] = sin(z);
-	cube[1][0] = -sin(z);
-	cube[1][1] = cos(z);
+void Matrix3::setTrans(double dx, double dy) {
+	mat[DIM - 1][0] = dx;
+	mat[DIM - 1][1] = dy;
+	//mat[DIM - 1][2] = dz;
+}
+
+void Matrix3::setRotationX(float x) { // Um den Punkt X Rotieren -> Koordinaten Y und Z übergeben | xneu = xalt | yneu = y*cos(a) + z * sin(a) | zneu = y * -sin(a) + z * cos(a)
+	mat[1][1] = cos(x);
+	mat[1][2] = sin(x);
+	mat[2][1] = -sin(x);
+	mat[2][2] = cos(x);
+}
+
+void Matrix3::setRotationY(float y) {
+	mat[0][0] = cos(y);
+	mat[0][2] = -sin(y);
+	mat[2][0] = sin(y);
+	mat[2][2] = cos(y);
+}
+
+void Matrix3::setRotationZ(float z) {
+	mat[0][0] = cos(z);
+	mat[0][1] = sin(z);
+	mat[1][0] = -sin(z);
+	mat[1][1] = cos(z);
 }
