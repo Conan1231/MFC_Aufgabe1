@@ -23,6 +23,8 @@ public:
 	double xd_delta;
 	double yd_min;
 	double yd_delta;
+	int m_height;
+	int m_width;
 
 // Überschreibungen
 	protected:
@@ -48,5 +50,10 @@ public:
 	afx_msg void OnVektorQuadratrotieren();
 	afx_msg void OnVektorQuadratrotierenv2();
 	afx_msg void OnAufgabe4W32780();
+
+	void GLInit(int Breite, int Hoehe, int Modus);
+	void Bunter_Einheitswuerfel();
+	void Achsenkreuz(float l);
+	afx_msg void OnAufgabe5Cubegl();
 };
 

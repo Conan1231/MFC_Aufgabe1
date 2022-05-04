@@ -9,6 +9,8 @@
 #include "ChildView.h"
 #include "Vektor2.h"
 #include "Vektor3.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,6 +45,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_VEKTOR_QUADRATROTIEREN, &CChildView::OnVektorQuadratrotieren)
 	ON_COMMAND(ID_VEKTOR_QUADRATROTIERENV2, &CChildView::OnVektorQuadratrotierenv2)
 	ON_COMMAND(ID_AUFGABE4_W32780, &CChildView::OnAufgabe4W32780)
+	ON_COMMAND(ID_AUFGABE5_CUBEGL, &CChildView::OnAufgabe5Cubegl)
 END_MESSAGE_MAP()
 
 
@@ -448,7 +451,7 @@ void CChildView::OnAufgabe4W32780()
 	double windowx = rect.Width() / 2;
 	double windowy = rect.Height() / 2;
 	
-	double size = 150;
+	double size = 99;
 	int diff = 0;
 
 	Vektor3 cube[8];
@@ -516,4 +519,233 @@ void CChildView::OnAufgabe4W32780()
 		}
 	}
 	
+}
+
+// Aufgabe 5 OpenGL
+
+void CChildView::GLInit(int Breite, int Hoehe, int Modus)
+{
+	static HDC         hdc;
+	static HGLRC       hglrc;
+	int         iPixelFormat;
+	HWND hwnd = GetSafeHwnd();
+
+
+	static PIXELFORMATDESCRIPTOR pfd =	//pfd legt das Aussehen der Szene fest
+	{
+		sizeof(PIXELFORMATDESCRIPTOR),
+		1,						//Versionsnummer
+		PFD_DRAW_TO_WINDOW |	//pfd muss Windows unterstützen
+		PFD_SUPPORT_OPENGL |	//pfd muss OpenGL unterstützen
+		PFD_DOUBLEBUFFER ,		//Doppelpuffer wird unterstützt
+		PFD_TYPE_RGBA,			//RGBA-Farbformat auswählen
+		32,						//Bit-Farbtiefe
+		0, 0, 0, 0, 0, 0,		//Farbbits werden ignoriert
+		0,						//kein Alphapuffer
+		0,						//Schiebebit ignoriert
+		0,						//kein Ansammlungspuffer
+		0, 0, 0, 0,				//Ansammlungsbits werden ignoriert
+		16,						//16bit Z-Puffer (Tiefenpuffer)
+		16,						//Masken-Puffer
+		0,						//keinen Hilfs-Puffer
+		PFD_MAIN_PLANE,			//Festlegung der Zeichenebene (Hauptebene)
+		0,						//reserviert
+		0, 0, 0					//Ebenenmasken werden ignoriert 
+	};
+	CDC* pDC = GetDC();
+	CRect gesamt, client;
+	GetWindowRect(&gesamt);
+	GetClientRect(&client);
+	int diff_x = gesamt.Width() - client.Width();
+	int diff_y = gesamt.Height() - client.Height();
+	m_height = Hoehe;
+	m_width = Breite;
+
+	switch (Modus)
+	{
+	case 1:  // Modus 1 -> Initialisierung
+
+		// ---------- Fenstergröße
+		GetParent()->SetWindowPos(&wndTop,
+			50, 50, m_height + diff_x, m_width + diff_y, 0);
+		//		GetParent()->ShowWindow(SW_NORMAL);
+		GetParent()->RedrawWindow();
+		// ------ Device Context
+		hdc = pDC->GetSafeHdc();
+
+		// ------ Pixelformat einstellen (OpenGL-fähig)
+		iPixelFormat = ChoosePixelFormat(hdc, &pfd);
+		SetPixelFormat(hdc, iPixelFormat, &pfd);
+
+		// ----  Rendering-Context erstellen und zuweisen
+		hglrc = wglCreateContext(hdc);
+		if (hglrc == NULL) { SetWindowText(CString("Fehler beim RC !")); Sleep(2000); }
+		wglMakeCurrent(hdc, hglrc);
+		break;
+
+	case 0:  // Modus 0 -> Beenden
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hglrc);
+
+		ReleaseDC(pDC);
+		break;
+	}
+	return;
+
+}
+
+void CChildView::Bunter_Einheitswuerfel()
+{
+	glBegin(GL_QUADS);
+	glColor3f(0, 1, 0);          // grün bei z = -0.5
+	glNormal3f(0, 0, -1);
+	glVertex3f(-0.5, -0.5, -0.5);
+	glVertex3f(-0.5, 0.5, -0.5);
+	glVertex3f(0.5, 0.5, -0.5);
+	glVertex3f(0.5, -0.5, -0.5);
+
+	glColor3f(1, 0, 0);        // rot bei z = 0.5
+	glNormal3f(0, 0, 1);
+	glVertex3f(-0.5, -0.5, 0.5);
+	glVertex3f(0.5, -0.5, 0.5);
+	glVertex3f(0.5, 0.5, 0.5);
+	glVertex3f(-0.5, 0.5, 0.5);
+
+	glColor3f(1, 0.75, 0.25);  // orange bei y = -0.5
+	glNormal3f(0, -1, 0);
+	glVertex3f(-0.5, -0.5, -0.5);
+	glVertex3f(0.5, -0.5, -0.5);
+	glVertex3f(0.5, -0.5, 0.5);
+	glVertex3f(-0.5, -0.5, 0.5);
+
+	glColor3f(0, 0, 1);          // blau bei y = 0.5
+	glNormal3f(0, 1, 0);
+	glVertex3f(-0.5, 0.5, -0.5);
+	glVertex3f(-0.5, 0.5, 0.5);
+	glVertex3f(0.5, 0.5, 0.5);
+	glVertex3f(0.5, 0.5, -0.5);
+
+	glColor3f(1, 0, 1);          // lila bei x =  0.5
+	glNormal3f(-1, 0, 0);
+	glVertex3f(-0.5, -0.5, -0.5);
+	glVertex3f(-0.5, -0.5, 0.5);
+	glVertex3f(-0.5, 0.5, 0.5);
+	glVertex3f(-0.5, 0.5, -0.5);
+
+	glColor3f(1, 1, 0);          // gelb bei x = -0.5
+	glNormal3f(1, 0, 0);
+	glVertex3f(0.5, -0.5, -0.5);
+	glVertex3f(0.5, 0.5, -0.5);
+	glVertex3f(0.5, 0.5, 0.5);
+	glVertex3f(0.5, -0.5, 0.5);
+	glEnd();
+}
+
+void CChildView::Achsenkreuz(float l)
+{
+	GLfloat Pfeil = (float)0.05;
+
+	glBegin(GL_LINES);
+	glColor3f(0, 0, 0);
+	glVertex3f(-l, 0, 0);  // Achsen
+	glVertex3f(l, 0, 0);
+
+	glVertex3f(0, -l, 0);
+	glVertex3f(0, l, 0);
+
+	glVertex3f(0, 0, -l);
+	glVertex3f(0, 0, l);
+
+	glVertex3f(l, 0, 0);  // Pfeile
+	glVertex3f(l - Pfeil, Pfeil, 0);
+
+	glVertex3f(l, 0, 0);
+	glVertex3f(l - Pfeil, -Pfeil, 0);
+
+	glVertex3f(0, l, 0);  // Pfeile
+	glVertex3f(0, l - Pfeil, Pfeil);
+
+	glVertex3f(0, l, 0);
+	glVertex3f(0, l - Pfeil, -Pfeil);
+
+	glVertex3f(0, 0, l);  // Pfeile
+	glVertex3f(Pfeil, 0, l - Pfeil);
+
+	glVertex3f(0, 0, l);
+	glVertex3f(-Pfeil, 0, l - Pfeil);
+	glEnd();
+}
+
+void CChildView::OnAufgabe5Cubegl()
+{
+	GLInit(700, 700, 1);
+	glClearColor(0.5,0.5,0.5,0); // Setzen der Farbe, die beim Clearen verwendet wird
+
+	glMatrixMode(GL_PROJECTION); // Hier werden Projektionen organisiert
+	glLoadIdentity();
+								 
+	//glOrtho(-1, 1, -1, 1, 1.5, 6);
+	glFrustum(-1, 1, -1, 1, 1.5, 6);
+	gluLookAt(1.0, 1.0, 3.0,	// Augpunkt
+			  0.0, 0.0, 0.0,	// Zielpunkt
+			  0.0, 1.0, 0.0);	// Up-Vektor | Winkel wie auf Objekt geschaut wird (z.B. Kopf schräg halten)
+
+
+	for (int anim = 0; anim < 1000; anim++) {
+		
+		glEnable(GL_DEPTH_TEST);	// Tiefe hinzufügen
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		glMatrixMode(GL_MODELVIEW); // Transformationen organisieren
+
+		glLoadIdentity();
+		Achsenkreuz(1.2);
+		glRotated(anim, 0.0, 1.0, 0.0);
+		glRotated(-anim, 1.0, 0.0, 0.0);
+		Bunter_Einheitswuerfel();
+
+		
+		/*Gitter um das Gebilde*/
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glScaled(1.2, 1.2, 1.2);
+		Bunter_Einheitswuerfel();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		/*Würfel Pickel 1*/
+		glTranslated(0.5, 0, 0);
+		glScaled(0.5, 0.5, 0.5);
+		Bunter_Einheitswuerfel();
+
+		/*Würfel Pickel 2*/
+		glTranslated(-2, 0, 0);
+		Bunter_Einheitswuerfel();
+
+		/*Würfel Pickel 3*/
+		glTranslated(1, 1, 0);
+		Bunter_Einheitswuerfel();
+
+		/*Würfel Pickel 4*/
+		glTranslated(0, -2, 0);
+		Bunter_Einheitswuerfel();
+		
+		/*Würfel Pickel 5*/
+		glTranslated(0, 1, 1);
+		Bunter_Einheitswuerfel();
+
+		/*Würfel Pickel 6*/
+		glTranslated(0, 0, -2);
+		Bunter_Einheitswuerfel();
+
+		Sleep(10);
+		SwapBuffers(wglGetCurrentDC());
+
+		// Animation abbrechen, wenn Esc gedrückt
+		if (GetAsyncKeyState(VK_ESCAPE)) {
+			break;
+		}
+	}
+	
+
+	GLInit(0, 0, 0);
 }
