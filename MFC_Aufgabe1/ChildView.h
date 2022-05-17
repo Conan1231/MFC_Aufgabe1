@@ -55,5 +55,6 @@ public:
 	void Bunter_Einheitswuerfel();
 	void Achsenkreuz(float l);
 	afx_msg void OnAufgabe5Cubegl();
+	afx_msg void OnAufgabe6Quadric();
 };
 

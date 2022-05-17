@@ -46,6 +46,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_VEKTOR_QUADRATROTIERENV2, &CChildView::OnVektorQuadratrotierenv2)
 	ON_COMMAND(ID_AUFGABE4_W32780, &CChildView::OnAufgabe4W32780)
 	ON_COMMAND(ID_AUFGABE5_CUBEGL, &CChildView::OnAufgabe5Cubegl)
+	ON_COMMAND(ID_AUFGABE6_QUADRIC, &CChildView::OnAufgabe6Quadric)
 END_MESSAGE_MAP()
 
 
@@ -679,7 +680,7 @@ void CChildView::Achsenkreuz(float l)
 void CChildView::OnAufgabe5Cubegl()
 {
 	GLInit(700, 700, 1);
-	glClearColor(0.5,0.5,0.5,0); // Setzen der Farbe, die beim Clearen verwendet wird
+	glClearColor(0.5,0.5,0.5,0); // Setzen der Farbe, die beim Clearen verwendet wird [R,G,B,alpha-Kanal = 1 solid; 0 transparent] 
 
 	glMatrixMode(GL_PROJECTION); // Hier werden Projektionen organisiert
 	glLoadIdentity();
@@ -701,40 +702,46 @@ void CChildView::OnAufgabe5Cubegl()
 
 		glLoadIdentity();
 		Achsenkreuz(1.2);
-		glRotated(anim, 0.0, 1.0, 0.0);
-		glRotated(-anim, 1.0, 0.0, 0.0);
+		//glRotated(anim, 0.0, 1.0, 0.0);
+		//glRotated(-anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
 		
-		/*Gitter um das Gebilde*/
+		// Gitter um das Gebilde
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glScaled(1.2, 1.2, 1.2);
 		Bunter_Einheitswuerfel();
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		/*Würfel Pickel 1*/
+		// Würfel Pickel 1
 		glTranslated(0.5, 0, 0);
 		glScaled(0.5, 0.5, 0.5);
+		glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		/*Würfel Pickel 2*/
+		// Würfel Pickel 2
 		glTranslated(-2, 0, 0);
+		glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		/*Würfel Pickel 3*/
+		// Würfel Pickel 3
 		glTranslated(1, 1, 0);
+		glRotated(anim, 0.0, 1.0, 1.0);
 		Bunter_Einheitswuerfel();
 
-		/*Würfel Pickel 4*/
+		// Würfel Pickel 4
 		glTranslated(0, -2, 0);
+		//glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 		
-		/*Würfel Pickel 5*/
+		//Würfel Pickel 5
 		glTranslated(0, 1, 1);
+		//glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		/*Würfel Pickel 6*/
+		// Würfel Pickel 6
 		glTranslated(0, 0, -2);
+		//glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
 		Sleep(10);
@@ -745,7 +752,127 @@ void CChildView::OnAufgabe5Cubegl()
 			break;
 		}
 	}
+
+	/* // Dorian's shizzle
+	for (int i = 0;;i++) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		Achsenkreuz(1.6);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		Bunter_Einheitswuerfel();
+
+		double minicubespeed = 1.4;
+
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(1.5, 0, 0);
+		glRotated(i * minicubespeed, 1.0, 0, 0);
+		Bunter_Einheitswuerfel();
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(-1.5, 0, 0);
+		glRotated(i * minicubespeed, -1.0, 0, 0);
+		Bunter_Einheitswuerfel();
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(0, 1.5, 0);
+		glRotated(i * minicubespeed, 0, 1.0, 0);
+		Bunter_Einheitswuerfel();
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(0, -1.5, 0);
+		glRotated(i * minicubespeed, 0, -1.0, 0);
+		Bunter_Einheitswuerfel();
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(0, 0, 1.5);
+		glRotated(i * minicubespeed, 0, 0, 1.0);
+		Bunter_Einheitswuerfel();
+
+		glLoadIdentity();
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(i * 2, 1.0, 0.0, 0.0);
+		glRotated(i * 1.5, 0.0, 1.0, 0.0);
+		glRotated(i, 1.0, 0.0, 1.0);
+		glTranslated(0, 0, -1.5);
+		glRotated(i * minicubespeed, 0, 0, -1.0);
+		Bunter_Einheitswuerfel();
+
+		SwapBuffers(wglGetCurrentDC());
+
+		if (GetAsyncKeyState(VK_ESCAPE))
+			break;
+	}
+	*/
 	
+
+	GLInit(0, 0, 0);
+}
+
+
+void CChildView::OnAufgabe6Quadric()
+{
+	GLInit(700, 700, 1);
+	glClearColor(0.5, 0.5, 0.5, 0); // Setzen der Farbe, die beim Clearen verwendet wird
+
+	glMatrixMode(GL_PROJECTION); // Hier werden Projektionen organisiert
+	glLoadIdentity();
+
+	glFrustum(-1, 1, -1, 1, 1.5, 6);
+	gluLookAt(1.0, 1.0, 3.0,	// Augpunkt
+		0.0, 0.0, 0.0,	// Zielpunkt
+		0.0, 1.0, 0.0);	// Up-Vektor | Winkel wie auf Objekt geschaut wird (z.B. Kopf schräg halten)
+
+	glEnable(GL_DEPTH_TEST);	// Tiefe hinzufügen
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW); // Transformationen organisieren
+	glLoadIdentity();
+
+	GLUquadricObj* pquadric = gluNewQuadric();
+	gluQuadricDrawStyle(pquadric, GLU_LINE);
+
+	glColor3d(0.0, 1.0, 0.0);
+	gluDisk(pquadric, 0.3, 0.5, 20, 5);
+
+	glTranslated(-1, 0, 0);
+	glColor3d(1.0, 0.0, 0.0);
+	gluSphere(pquadric, 0.5, 20, 20);
+
+	glPushMatrix();
+
+	glColor3d(1, 1, 0);
+	gluCylinder(pquadric, 0.5, 0.5, 1, 20, 10);
+	glPopMatrix();
+
+	SwapBuffers(wglGetCurrentDC());
+
 
 	GLInit(0, 0, 0);
 }
