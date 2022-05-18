@@ -54,6 +54,7 @@ public:
 	void GLInit(int Breite, int Hoehe, int Modus);
 	void Bunter_Einheitswuerfel();
 	void Achsenkreuz(float l);
+	void material(float AmatR, float AmatG, float AmatB, float DmatR, float DmatG, float DmatB, float SmatR, float SmatG, float SmatB, float sh);
 	afx_msg void OnAufgabe5Cubegl();
 	afx_msg void OnAufgabe6Quadric();
 };

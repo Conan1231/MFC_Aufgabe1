@@ -850,29 +850,50 @@ void CChildView::OnAufgabe6Quadric()
 		0.0, 1.0, 0.0);	// Up-Vektor | Winkel wie auf Objekt geschaut wird (z.B. Kopf schräg halten)
 
 	glEnable(GL_DEPTH_TEST);	// Tiefe hinzufügen
+	
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW); // Transformationen organisieren
 	glLoadIdentity();
 
 	GLUquadricObj* pquadric = gluNewQuadric();
-	gluQuadricDrawStyle(pquadric, GLU_LINE);
+	gluQuadricDrawStyle(pquadric, GLU_FILL);
 
-	glColor3d(0.0, 1.0, 0.0);
+	glTranslated(1, 0, 0);
+	material(0.1745	,0.01175	,0.01175,	0.61424	,0.04136	,0.04136,	0.727811	,0.626959,	0.626959,	76.8f); // ruby
 	gluDisk(pquadric, 0.3, 0.5, 20, 5);
 
+	glPushMatrix();
+	gluQuadricDrawStyle(pquadric, GLU_FILL);
 	glTranslated(-1, 0, 0);
-	glColor3d(1.0, 0.0, 0.0);
+	material(0.05, 0.05, 0.0, 0.5, 0.5, 0.4, 0.7, 0.7, 0.04, .078125);
 	gluSphere(pquadric, 0.5, 20, 20);
 
+	
+	
 	glPushMatrix();
-
-	glColor3d(1, 1, 0);
-	gluCylinder(pquadric, 0.5, 0.5, 1, 20, 10);
+	material(0.05	,0.05	,0.0	,0.5	,0.5	,0.4	,0.7	,0.7	,0.04	,.078125); // yellow rubber ball
+	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
 	glPopMatrix();
 
 	SwapBuffers(wglGetCurrentDC());
 
 
 	GLInit(0, 0, 0);
+}
+
+void CChildView::material(float AmatR, float AmatG, float AmatB, float DmatR, float DmatG, float DmatB, float SmatR, float SmatG, float SmatB, float sh) {
+	GLfloat Ambient[4] = { AmatR,AmatG,AmatB,1 };
+	GLfloat Diffuse[4] = { DmatR,DmatG,DmatB,1 };
+	GLfloat Specular[4] = { SmatR,SmatG,SmatB,1 };
+	
+	GLfloat shininess = sh*128;
+	glMaterialfv(GL_FRONT, GL_AMBIENT, Ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, Diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, Specular);
+
+	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 }
