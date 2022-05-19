@@ -473,7 +473,7 @@ void CChildView::OnAufgabe4W32780()
 	
 	for (int anim = 0; anim < 90000; anim++) {
 		m_DC->FillSolidRect(0, 0, rect.Width(), rect.Height(), RGB(131, 89, 216));
-		Sleep(10);
+		Sleep(5);
 		
 		/*RY.SetRot(winkel);
 		winkel += 0.01;
@@ -486,10 +486,22 @@ void CChildView::OnAufgabe4W32780()
 		// Rotieren
 		TransCube.setTrans(-windowx, -windowy);
 		RotCube.setRotationX(0.01);
-		RotCube.setRotationY(0.01);
-		RotCube.setRotationZ(0.01);
+
+
 		TransCubeReverse.setTrans(windowx, windowy);
 
+		for (int i = 0; i < 8; i++) {
+			cube[i] = TransCube * cube[i]; // Verschieben Ursprung
+			cube[i] = RotCube * cube[i]; // Rotieren im Ursprung
+			cube[i] = TransCubeReverse * cube[i]; // Verschieben undo
+		}		
+		RotCube.setRotationY(0.01);
+		for (int i = 0; i < 8; i++) {
+			cube[i] = TransCube * cube[i]; // Verschieben Ursprung
+			cube[i] = RotCube * cube[i]; // Rotieren im Ursprung
+			cube[i] = TransCubeReverse * cube[i]; // Verschieben undo
+		}		
+		RotCube.setRotationZ(0.01);
 		for (int i = 0; i < 8; i++) {
 			cube[i] = TransCube * cube[i]; // Verschieben Ursprung
 			cube[i] = RotCube * cube[i]; // Rotieren im Ursprung

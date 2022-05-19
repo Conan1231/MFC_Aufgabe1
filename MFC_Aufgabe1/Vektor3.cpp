@@ -55,6 +55,7 @@ void Matrix3::setRotationX(float x) { // Um den Punkt X Rotieren -> Koordinaten 
 	mat[1][2] = sin(x);
 	mat[2][1] = -sin(x);
 	mat[2][2] = cos(x);
+	mat[0][1] = mat[0][2] = mat[0][3] = mat[1][0] = mat[1][3] = mat[2][0] = mat[2][3] = mat[3][0] = mat[3][1] = mat[3][2] = 0;
 }
 
 void Matrix3::setRotationY(float y) {
@@ -62,6 +63,7 @@ void Matrix3::setRotationY(float y) {
 	mat[0][2] = -sin(y);
 	mat[2][0] = sin(y);
 	mat[2][2] = cos(y);
+	mat[0][1] = mat[0][3] = mat[1][0] = mat[1][2] = mat[1][3] = mat[2][1] = mat[2][3] = mat[3][0] = mat[3][1] = mat[3][2] = 0;
 }
 
 void Matrix3::setRotationZ(float z) {
@@ -69,4 +71,5 @@ void Matrix3::setRotationZ(float z) {
 	mat[0][1] = sin(z);
 	mat[1][0] = -sin(z);
 	mat[1][1] = cos(z);
+	mat[0][2] = mat[0][3] = mat[1][2] = mat[1][3] = mat[2][0] = mat[2][1] = mat[2][3] = mat[3][0] = mat[3][1] = mat[3][2] = 0;
 }
