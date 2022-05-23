@@ -821,6 +821,13 @@ void CChildView::OnAufgabe6Quadric()
 	gluSphere(pquadric, 0.5, 20, 20);
 	glPopMatrix();
 
+	// ball left left
+	glPushMatrix();
+	glTranslated(-2, 0, 0);
+	material_v2(colors[20]);
+	gluSphere(pquadric, 0.5, 20, 20);
+	glPopMatrix();
+
 	// black cylinder left
 	glPushMatrix();
 	//material(0.05	,0.05	,0.0	,0.5	,0.5	,0.4	,0.7	,0.7	,0.04	,.078125); 
@@ -828,9 +835,16 @@ void CChildView::OnAufgabe6Quadric()
 	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
 	glPopMatrix();
 
-	// black cylinder right
+	// black cylinder left
 	glPushMatrix();
 	glTranslated(-1, 0, 0);
+	material_v2(colors[4]);
+	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
+	glPopMatrix();
+
+	// black cylinder green
+	glPushMatrix();
+	glTranslated(-2, 0, 0);
 	material_v2(colors[4]);
 	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
 	glPopMatrix();
