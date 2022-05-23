@@ -26,6 +26,7 @@ CChildView::CChildView()
 	double xd_delta = 0;
 	double yd_min = 0;
 	double yd_delta = 0;
+
 }
 
 CChildView::~CChildView()
@@ -473,7 +474,7 @@ void CChildView::OnAufgabe4W32780()
 	
 	for (int anim = 0; anim < 90000; anim++) {
 		m_DC->FillSolidRect(0, 0, rect.Width(), rect.Height(), RGB(131, 89, 216));
-		Sleep(5);
+		Sleep(10);
 		
 		/*RY.SetRot(winkel);
 		winkel += 0.01;
@@ -712,7 +713,7 @@ void CChildView::OnAufgabe5Cubegl()
 
 		glMatrixMode(GL_MODELVIEW); // Transformationen organisieren
 
-		glLoadIdentity();
+		glLoadIdentity(); // Zurücksetzen auf Standardeinstellungen, Laden der Identitätsmatrix
 		Achsenkreuz(1.2);
 		//glRotated(anim, 0.0, 1.0, 0.0);
 		//glRotated(-anim, 1.0, 0.0, 0.0);
@@ -725,35 +726,46 @@ void CChildView::OnAufgabe5Cubegl()
 		Bunter_Einheitswuerfel();
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		// Würfel Pickel 1
-		glTranslated(0.5, 0, 0);
+		// Würfel Pickel 1 rechts
+		glLoadIdentity();
+		glTranslated(0.6, 0, 0);
 		glScaled(0.5, 0.5, 0.5);
 		glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		// Würfel Pickel 2
-		glTranslated(-2, 0, 0);
+		// Würfel Pickel 2 links
+		glLoadIdentity();
+		glTranslated(-0.6, 0, 0);
+		glScaled(0.5, 0.5, 0.5);
 		glRotated(anim, 1.0, 0.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		// Würfel Pickel 3
-		glTranslated(1, 1, 0);
-		glRotated(anim, 0.0, 1.0, 1.0);
+		// Würfel Pickel 3 Oben
+		glLoadIdentity();
+		glTranslated(0, 0.6, 0);
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(anim, 0.0, 1.0, 0.0);
 		Bunter_Einheitswuerfel();
 
-		// Würfel Pickel 4
-		glTranslated(0, -2, 0);
-		//glRotated(anim, 1.0, 0.0, 0.0);
+		// Würfel Pickel 4 Unten
+		glLoadIdentity();
+		glTranslated(0, -0.6, 0);
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(anim, 0.0, 1.0, 0.0);
 		Bunter_Einheitswuerfel();
 		
-		//Würfel Pickel 5
-		glTranslated(0, 1, 1);
-		//glRotated(anim, 1.0, 0.0, 0.0);
+		//Würfel Pickel 5 vorne
+		glLoadIdentity();
+		glTranslated(0, 0.0, 0.6);
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(anim, 0.0, 0.0, 1.0);
 		Bunter_Einheitswuerfel();
 
-		// Würfel Pickel 6
-		glTranslated(0, 0, -2);
-		//glRotated(anim, 1.0, 0.0, 0.0);
+		// Würfel Pickel 6 hinten
+		glLoadIdentity();
+		glTranslated(0, 0, -0.6);
+		glScaled(0.5, 0.5, 0.5);
+		glRotated(anim, 0.0, 0.0, 1.0);
 		Bunter_Einheitswuerfel();
 
 		Sleep(10);
@@ -764,94 +776,16 @@ void CChildView::OnAufgabe5Cubegl()
 			break;
 		}
 	}
-
-	/* // Dorian's shizzle
-	for (int i = 0;;i++) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		Achsenkreuz(1.6);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		Bunter_Einheitswuerfel();
-
-		double minicubespeed = 1.4;
-
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(1.5, 0, 0);
-		glRotated(i * minicubespeed, 1.0, 0, 0);
-		Bunter_Einheitswuerfel();
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(-1.5, 0, 0);
-		glRotated(i * minicubespeed, -1.0, 0, 0);
-		Bunter_Einheitswuerfel();
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(0, 1.5, 0);
-		glRotated(i * minicubespeed, 0, 1.0, 0);
-		Bunter_Einheitswuerfel();
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(0, -1.5, 0);
-		glRotated(i * minicubespeed, 0, -1.0, 0);
-		Bunter_Einheitswuerfel();
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(0, 0, 1.5);
-		glRotated(i * minicubespeed, 0, 0, 1.0);
-		Bunter_Einheitswuerfel();
-
-		glLoadIdentity();
-		glScaled(0.5, 0.5, 0.5);
-		glRotated(i * 2, 1.0, 0.0, 0.0);
-		glRotated(i * 1.5, 0.0, 1.0, 0.0);
-		glRotated(i, 1.0, 0.0, 1.0);
-		glTranslated(0, 0, -1.5);
-		glRotated(i * minicubespeed, 0, 0, -1.0);
-		Bunter_Einheitswuerfel();
-
-		SwapBuffers(wglGetCurrentDC());
-
-		if (GetAsyncKeyState(VK_ESCAPE))
-			break;
-	}
-	*/
-	
-
 	GLInit(0, 0, 0);
 }
 
 
 void CChildView::OnAufgabe6Quadric()
 {
-	GLInit(700, 700, 1);
-	glClearColor(0.5, 0.5, 0.5, 0); // Setzen der Farbe, die beim Clearen verwendet wird
+	float colors[24][10] = { {0.0215,0.1745,0.0215,0.07568,0.61424,0.07568,0.633,0.727811,0.633,0.6  },   {0.135,0.2225,0.1575,0.54,0.89,0.63,0.316228,0.316228,0.316228,0.1  },   {0.05375,0.05,0.06625,0.18275,0.17,0.22525,0.332741,0.328634,0.346435,0.3  },   {0.25,0.20725,0.20725,1,0.829,0.829,0.296648,0.296648,0.296648,0.088  },   {0.1745,0.01175,0.01175,0.61424,0.04136,0.04136,0.727811,0.626959,0.626959,0.6  },   {0.1,0.18725,0.1745,0.396,0.74151,0.69102,0.297254,0.30829,0.306678,0.1  },   {0.329412,0.223529,0.027451,0.780392,0.568627,0.113725,0.992157,0.941176,0.807843,0.21794872  },   {0.2125,0.1275,0.054,0.714,0.4284,0.18144,0.393548,0.271906,0.166721,0.2  },   {0.25,0.25,0.25,0.4,0.4,0.4,0.774597,0.774597,0.774597,0.6  },   {0.19125,0.0735,0.0225,0.7038,0.27048,0.0828,0.256777,0.137622,0.086014,0.1  },   {0.24725,0.1995,0.0745,0.75164,0.60648,0.22648,0.628281,0.555802,0.366065,0.4  },   {0.19225,0.19225,0.19225,0.50754,0.50754,0.50754,0.508273,0.508273,0.508273,0.4  },   {0,0,0,0.01,0.01,0.01,0.5,0.5,0.5,0.25  },
+{0,0.1,0.06,0,0.50980392,0.50980392,0.50196078,0.50196078,0.50196078,0.25  },   {0,0,0,0.1,0.35,0.1,0.45,0.55,0.45,0.25  },   {0,0,0,0.5,0,0,0.7,0.6,0.6,0.25  },   {0,0,0,0.55,0.55,0.55,0.7,0.7,0.7,0.25  },   {0,0,0,0.5,0.5,0,0.6,0.6,0.5,0.25  },   {0.02,0.02,0.02,0.01,0.01,0.01,0.4,0.4,0.4,0.078125  },   {0,0.05,0.05,0.4,0.5,0.5,0.04,0.7,0.7,0.078125  },   {0,0.05,0,0.4,0.5,0.4,0.04,0.7,0.04,0.078125  },   {0.05,0,0,0.5,0.4,0.4,0.7,0.04,0.04,0.078125  },   {0.05,0.05,0.05,0.5,0.5,0.5,0.7,0.7,0.7,0.078125  },   {0.05,0.05,0,0.5,0.5,0.4,0.7,0.7,0.04,0.078125  } };
+	GLInit(1000, 1000, 1);
+	glClearColor(0.1f, 0.0f, 0.1f, 0); // Setzen der Farbe, die beim Clearen verwendet wird ; Dark purple (0.1f, 0.0f, 0.1f)
 
 	glMatrixMode(GL_PROJECTION); // Hier werden Projektionen organisiert
 	glLoadIdentity();
@@ -874,22 +808,33 @@ void CChildView::OnAufgabe6Quadric()
 	GLUquadricObj* pquadric = gluNewQuadric();
 	gluQuadricDrawStyle(pquadric, GLU_FILL);
 
-	glTranslated(1, 0, 0);
-	material(0.1745	,0.01175	,0.01175,	0.61424	,0.04136	,0.04136,	0.727811	,0.626959,	0.626959,	76.8f); // ruby
-	gluDisk(pquadric, 0.3, 0.5, 20, 5);
-
-	glPushMatrix();
-	gluQuadricDrawStyle(pquadric, GLU_FILL);
-	glTranslated(-1, 0, 0);
-	material(0.05, 0.05, 0.0, 0.5, 0.5, 0.4, 0.7, 0.7, 0.04, .078125);
+	// rubber ball right
+	glTranslated(1, 0, 0); 
+	material_v2(colors[4]); // ruby
 	gluSphere(pquadric, 0.5, 20, 20);
+	glPopMatrix();
 
-	
-	
+	// rubber ball left
 	glPushMatrix();
-	material(0.05	,0.05	,0.0	,0.5	,0.5	,0.4	,0.7	,0.7	,0.04	,.078125); // yellow rubber ball
+	glTranslated(-1, 0, 0);
+	material(0.05, 0.05, 0.0, 0.5, 0.5, 0.4, 0.7, 0.7, 0.04, .078125); // yellow
+	gluSphere(pquadric, 0.5, 20, 20);
+	glPopMatrix();
+
+	// black cylinder left
+	glPushMatrix();
+	//material(0.05	,0.05	,0.0	,0.5	,0.5	,0.4	,0.7	,0.7	,0.04	,.078125); 
+	material_v2(colors[4]);
 	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
 	glPopMatrix();
+
+	// black cylinder right
+	glPushMatrix();
+	glTranslated(-1, 0, 0);
+	material_v2(colors[4]);
+	gluCylinder(pquadric, 0.5, 0.5, 0.6, 20, 10);
+	glPopMatrix();
+
 
 	SwapBuffers(wglGetCurrentDC());
 
@@ -909,3 +854,42 @@ void CChildView::material(float AmatR, float AmatG, float AmatB, float DmatR, fl
 
 	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 }
+
+void CChildView::material_v2(float colors[10]) {
+	GLfloat Ambient[4] = { colors[0], colors[1], colors[2], 1 };
+	GLfloat Diffuse[4] = { colors[3], colors[4], colors[5], 1 };
+	GLfloat Specular[4] = { colors[6], colors[7], colors[8], 1 };
+
+	GLfloat shininess = 128 * colors[9]; //0-128
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, Ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, Diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
+}
+/*
+* 0: emerald
+* 1: jade
+* 2: obsidian
+* 3: pearl
+* 4: ruby
+* 5: turquoise
+* 6: brass
+* 7: bronze
+* 8: chrome
+* 9: copper
+* 10: gold
+* 11: silver
+* 12: black plastic
+* 13: cyan plastic
+* 14: green plastic
+* 15: red plastic
+* 16: white plastic
+* 17: yellow plastic
+* 18: black rubber
+* 19: cyan rubber
+* 20: green rubber
+* 21: red rubber:
+* 22: white rubber:
+* 23: yellow rubber
+*/

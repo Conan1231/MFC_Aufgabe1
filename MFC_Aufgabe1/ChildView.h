@@ -55,6 +55,7 @@ public:
 	void Bunter_Einheitswuerfel();
 	void Achsenkreuz(float l);
 	void material(float AmatR, float AmatG, float AmatB, float DmatR, float DmatG, float DmatB, float SmatR, float SmatG, float SmatB, float sh);
+	void material_v2(float colors[10]);
 	afx_msg void OnAufgabe5Cubegl();
 	afx_msg void OnAufgabe6Quadric();
 };
